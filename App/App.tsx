@@ -1,4 +1,4 @@
-import React, { JSX } from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,12 +8,27 @@ import {
   StatusBar,
   Image,
   ImageSourcePropType,
-  GestureResponderEvent,
 } from 'react-native';
 
-export default function App(): JSX.Element {
-  const handlePress = (event: GestureResponderEvent): void => {
-    // ação ao clicar
+import { useState } from 'react';
+
+import { useTranslation } from "react-i18next";
+import "./src/utils/i18n"; // Import AFTER react-i18next
+
+export default function App() {
+  const [currentLanguage, setCurrentLanguage] = useState('en')
+
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng)
+    .then(() => {
+    setCurrentLanguage(lng);
+    })
+    .catch((err)=>{
+      console.log(err);
+    }
+  )
   };
 
   const logo: ImageSourcePropType = require('./src/assets/logo.png');
@@ -24,31 +39,31 @@ export default function App(): JSX.Element {
 
       <View style={styles.languages}>
         <TouchableOpacity
-          onPress={handlePress}
-          style={[styles.langButton, { borderColor: '#037CFC' }]}
+          onPress={() => changeLanguage('en')}
+          style={[styles.langButton, { borderColor: currentLanguage === 'en' ? '#037CFC' : 'transparent' }]}
         >
-          <Text style={styles.langText}>Inglês</Text>
+          <Text style={styles.langText}>English</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={handlePress}
-          style={[styles.langButton, { borderColor: '#037CFC' }]}
+          onPress={() => changeLanguage('pt')}
+          style={[styles.langButton, { borderColor: currentLanguage === 'pt' ? '#037CFC' : 'transparent' }]}
         >
-          <Text style={styles.langText}>Português Brasil</Text>
+          <Text style={styles.langText}>Português</Text>
         </TouchableOpacity>
       </View>
 
       <Image source={logo} style={styles.logo} resizeMode="contain" />
 
-      <Text style={styles.title}>Seja bem vindo</Text>
-      <Text style={styles.title}>ao seu app de filmes</Text>
+      <Text style={styles.title}>{t("Seja bem vindo")}</Text>
+      <Text style={styles.title}>{t("ao seu app de filmes")}</Text>
 
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>Acessar</Text>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>{t("Acessar")}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.linkButton} onPress={handlePress}>
-        <Text style={styles.linkText}>Criar uma nova conta</Text>
+      <TouchableOpacity style={styles.linkButton}>
+        <Text style={styles.linkText}>{t("Criar uma nova conta")}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -73,10 +88,10 @@ const styles = StyleSheet.create({
   },
   langButton: {
     borderWidth: 1,
-    padding: 4,
+    padding: 8,
     borderRadius: 4,
-    marginRight: 4,
-    marginLeft: 4,
+    marginRight: 8,
+    marginLeft: 8,
   },
   langText: {
     marginRight: 4,
@@ -100,12 +115,14 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: 6,
     marginTop: 28,
   },
   buttonText: {
     color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   linkButton: {
     marginTop: 14,
