@@ -19,7 +19,9 @@ O app muda os textos na tela quando o usuário clica nos botões de idioma (Ingl
 Clone o repositório:
 
 git clone https://github.com/imgabrielcastro/ReactNativeInternacionalizacao
+
 cd App
+
 Instale as dependências:
 
 npm install
